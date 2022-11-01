@@ -52,23 +52,23 @@ protected:
 void ValidatorFixture::SetUp()
 {
     p_val = new Validator{1, 10};
-    cout << "Hi from set up" << endl;
+    cout << "Set up called" << endl;
 }
 
 void ValidatorFixture::TearDown()
 {
     delete p_val;
-    cout << "Hi from tear down up" << endl;
+    cout << "Tear down called" << endl;
 }
 
 void ValidatorFixture::SetUpTestCase()
 {
-    cout << "Hi from set up test case" << endl;
+    cout << "Set up test case called" << endl;
 }
 
 void ValidatorFixture::TearDownTestCase()
 {
-    cout << "Hi from tear down test case" << endl;
+    cout << "Tear down test case called" << endl;
 }
 
 ValidatorFixture::ValidatorFixture()
