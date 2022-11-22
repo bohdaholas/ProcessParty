@@ -36,13 +36,21 @@ TEST(SystemExeArgs, ErrorStatusCode)
     ASSERT_EQ(CAT_NO_SUCH_DIR_ERR, status_code);
 }
 
-// TODO: write test here using search path
 TEST(SystemExeArgsPath, OkStatusCode)
 {
+    std::vector<std::string> ping_args{"-c", "1", "google.com"};
+    auto ping_path = ppp::search_path("ping");
+    int status_code = ppp::system(ping_path, ping_args);
+    ASSERT_STREQ("/usr/bin/ping", ping_path.c_str());
+    ASSERT_EQ(EXIT_SUCCESS, status_code);
 }
 
 TEST(SystemExeArgsPath, ErrorStatusCode)
 {
+    auto unknown_cmd_path = ppp::search_path("ndklawdnsm,da");
+    int status_code = ppp::system(unknown_cmd_path);
+    ASSERT_STREQ("", unknown_cmd_path.c_str());
+    ASSERT_NE(EXIT_SUCCESS, status_code);
 }
 
 int main(int argc, char **argv)
