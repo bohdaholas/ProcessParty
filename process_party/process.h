@@ -10,6 +10,15 @@ namespace process_party::process {
     // Function used by system()/spawn() to launch a process
     // TODO: windows & macos support
     int launch_process(const std::string &cmd, bool wait_to_finish);
+
+    std::string get_cmd(const std::string &exe_path,
+                        const std::vector<std::string> &args);
+    std::string get_cmd(const std::filesystem::path &exe_path,
+                        const std::vector<std::string> &args);
+    std::string get_cmd(const std::string &exe_path,
+                        const std::vector<std::string> &args,
+                        const std::vector<std::pair<int, int>> &redirection_list);
+
 }
 
 #endif //PROCESS_PARTY_PROCESS_H

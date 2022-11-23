@@ -8,12 +8,27 @@ namespace process_party::process {
     public:
         /*** Don't allow default constructors/destructors ***/
         child() = delete;
-        ~child() = delete;
+        ~child() = default;
 
-        child(const std::string &cmd, const std::vector<std::string> &args);
-        bool running();
+        child(const std::string &cmd);
+        child(const std::string &exe_path,
+              const std::vector<std::string> &args);
+        child(const std::filesystem::path &exe_path,
+              const std::vector<std::string> &args);
+        child(const std::string &exe_path,
+              const std::vector<std::string> &args,
+              const std::vector<std::pair<int, int>> &redirection_list);
         void wait();
-        int exit_code();
+        bool running();
+        void detach();
+        [[nodiscard]] int get_exit_code() const;
+        void terminate() const;
+    private:
+        pid_t child_pid;
+        std::string cmd;
+        int exit_code;
+
+        void launch_child(const std::string &cmd);
     };
 }
 

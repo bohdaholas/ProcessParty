@@ -54,3 +54,30 @@ int process_party::process::launch_process(const std::string &cmd, bool wait_to_
 #endif
     return status_code;
 }
+
+std::string process_party::process::get_cmd(const std::string &exe_path,
+                                            const std::vector<std::string> &args) {
+    std::stringstream ss;
+
+    ss << exe_path << " ";
+    for (const auto &arg: args) {
+        ss << arg << " ";
+    }
+
+    std::string cmd = ss.str();
+    cmd.pop_back();
+    return cmd;
+}
+
+std::string
+process_party::process::get_cmd(const std::filesystem::path &exe_path,
+                                const std::vector<std::string> &args) {
+    return get_cmd(exe_path.string(), args);
+}
+
+std::string process_party::process::get_cmd(const std::string &exe_path,
+                                            const std::vector<std::string> &args,
+                                            const std::vector<std::pair<int, int>> &redirection_list) {
+    return std::string();
+}
+

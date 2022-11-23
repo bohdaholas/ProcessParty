@@ -1,5 +1,4 @@
 #include <iostream>
-#include <process_party/common.h>
 #include <process_party/process.h>
 
 using std::cout, std::cerr, std::endl;
@@ -10,21 +9,14 @@ int process_party::process::system(const std::string &cmd) {
 
 int process_party::process::system(const std::string &exe_path,
                                    const std::vector<std::string> &args) {
-    std::stringstream ss;
-
-    ss << exe_path << " ";
-    for (const auto &arg: args) {
-        ss << arg << " ";
-    }
-
-    std::string cmd{ss.str()};
-    cmd.pop_back();
+    std::string cmd = get_cmd(exe_path, args);
     return process_party::process::system(cmd);
 }
 
 int process_party::process::system(const std::filesystem::path &exe_path,
                                    const std::vector<std::string> &args) {
-    return process_party::process::system(exe_path.string(), args);
+    std::string cmd = get_cmd(exe_path, args);
+    return process_party::process::system(cmd);
 }
 
 int process_party::process::system(const std::string &exe_path,
