@@ -10,7 +10,7 @@ namespace process_party::process {
         child() = delete;
         ~child() = default;
 
-        child(const std::string &cmd);
+        explicit child(const std::string &cmd);
         child(const std::string &exe_path,
               const std::vector<std::string> &args);
         child(const std::filesystem::path &exe_path,
