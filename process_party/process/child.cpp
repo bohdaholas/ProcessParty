@@ -4,7 +4,6 @@
 #include <boost/algorithm/string/classification.hpp>
 #include <unistd.h>
 #include <sys/wait.h>
-#include <sys/types.h>
 #include "child.h"
 #include "process_party/common.h"
 

@@ -13,7 +13,9 @@
 
 using std::cout, std::cerr, std::endl;
 
-int process_party::process::launch_process(const std::string &cmd, bool wait_to_finish) {
+int process_party::process::launch_process(const std::string &cmd,
+                                           bool wait_to_finish,
+                                           char **environment) {
     int status_code = EXIT_SUCCESS;
     pid_t pid;
 
@@ -28,7 +30,27 @@ int process_party::process::launch_process(const std::string &cmd, bool wait_to_
     } else if (pid > 0) {
         // Parent process
         if (wait_to_finish) {
-            waitpid(pid, &status_code, 0);
+            if ( waitpid(pid, &status_code, 0) != -1 ) {
+                if ( WIFEXITED(status_code) ) {
+                    int returned = WEXITSTATUS(status_code);
+                    printf("Exited normally with status_code %d\n", returned);
+                }
+                else if ( WIFSIGNALED(status_code) ) {
+                    int signum = WTERMSIG(status_code);
+                    printf("Exited due to receiving signal %d\n", signum);
+                }
+                else if ( WIFSTOPPED(status_code) ) {
+                    int signum = WSTOPSIG(status_code);
+                    printf("Stopped due to receiving signal %d\n", signum);
+                }
+                else {
+                    printf("Something strange just happened.\n");
+                }
+            }
+            else {
+                perror("waitpid() failed");
+                exit(EXIT_FAILURE);
+            }
         }
     } else {
         // Child process
@@ -41,7 +63,10 @@ int process_party::process::launch_process(const std::string &cmd, bool wait_to_
         arg_for_c.push_back(nullptr);
 
         execvp(args.at(0).c_str(),
-               const_cast<char *const *>(arg_for_c.data()));
+                const_cast<char *const *>(arg_for_c.data()));
+//        execvpe(args.at(0).c_str(),
+//               const_cast<char *const *>(arg_for_c.data()),
+//               environment);
 
         cerr << "Error occured when launching a program" << endl;
         exit(EXIT_FAILURE);
