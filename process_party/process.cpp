@@ -19,7 +19,7 @@ int process_party::process::launch_process(const std::string &cmd,
     int status_code = EXIT_SUCCESS;
     pid_t pid;
 
-    signal(SIGCHLD, SIG_IGN);
+//    signal(SIGCHLD, SIG_IGN)
 #if IS_WINDOWS
 #elif IS_LINUX
     pid = fork();
@@ -62,11 +62,9 @@ int process_party::process::launch_process(const std::string &cmd,
         }
         arg_for_c.push_back(nullptr);
 
-        execvp(args.at(0).c_str(),
-                const_cast<char *const *>(arg_for_c.data()));
-//        execvpe(args.at(0).c_str(),
-//               const_cast<char *const *>(arg_for_c.data()),
-//               environment);
+        execvpe(args.at(0).c_str(),
+               const_cast<char *const *>(arg_for_c.data()),
+               environment);
 
         cerr << "Error occured when launching a program" << endl;
         exit(EXIT_FAILURE);

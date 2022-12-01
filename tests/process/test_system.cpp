@@ -22,7 +22,7 @@ TEST(SystemCmd, ErrorStatusCode)
 
 TEST(SystemExeArgs, OkStatusCode)
 {
-    std::vector<std::string> ping_args{"-c", "1", "google.com"};
+    std::vector<std::string> ping_args{"-c", "1", "127.0.0.1"};
     int status_code = ppp::system("ping"s, ping_args);
     ASSERT_EQ(EXIT_SUCCESS, status_code);
 }
@@ -38,7 +38,7 @@ TEST(SystemExeArgs, ErrorStatusCode)
 
 TEST(SystemExeArgsPath, OkStatusCode)
 {
-    std::vector<std::string> ping_args{"-c", "1", "google.com"};
+    std::vector<std::string> ping_args{"-c", "1", "127.0.0.1"};
     auto ping_path = ppp::search_path("ping");
     int status_code = ppp::system(ping_path, ping_args);
     ASSERT_STREQ("/usr/bin/ping", ping_path.c_str());

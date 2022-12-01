@@ -17,13 +17,11 @@ process_party::process::environment::environment() {
         value = line.substr(delimiter_it + 1, line.size());
         environment_map[key] = value;
     }
+    raw_environment_map = get_raw();
 }
 
 process_party::process::environment::~environment() {
-    for (char **line_c = raw_environment_map; *line_c; line_c++) {
-        delete line_c;
-    }
-    delete raw_environment_map;
+    clear_env();
 }
 
 char **process_party::process::environment::get_raw() {
@@ -41,17 +39,27 @@ char **process_party::process::environment::get_raw() {
 }
 
 size_t process_party::process::environment::count_vars() {
-    size_t vars_count;
-    for (char **line_c = environ; *line_c; line_c++, vars_count++);
-    return vars_count;
+    return environment_map.size();
 }
 
 void
-process_party::process::environment::set_env(const std::string &key, const std::string &value) {
+process_party::process::environment::set_env(const std::string &key,
+                                             const std::string &value) {
     if (key.empty()) {
         throw std::runtime_error("Key variable is empty");
     }
     environment_map[key] = value;
+}
+
+bool process_party::process::environment::is_env_present(const std::string &key) {
+    return environment_map.count(key);
+}
+
+std::string process_party::process::environment::get_env(const std::string &key) {
+    if (is_env_present(key)) {
+        return environment_map[key];
+    }
+    throw std::runtime_error("Key is not present");
 }
 
 void process_party::process::environment::add_to_env(const std::string &key,
@@ -65,6 +73,18 @@ void process_party::process::environment::add_to_env(const std::string &key,
     } else {
         environment_map[key] += ":" + value;
     }
+}
+
+void process_party::process::environment::clear_env() {
+    if (raw_environment_map == nullptr) {
+        return;
+    }
+    environment_map.erase(environment_map.begin(), environment_map.end());
+
+    for (char **line_c = raw_environment_map; *line_c; line_c += PATH_MAX) {
+        delete line_c;
+    }
+    raw_environment_map = nullptr;
 }
 
 int process_party::this_process::get_id() {

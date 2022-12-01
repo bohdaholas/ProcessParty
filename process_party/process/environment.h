@@ -14,11 +14,13 @@ namespace process_party {
 
             char **get_raw();
             void set_env(const std::string &key, const std::string &value);
+            void clear_env();
+            std::string get_env(const std::string &key);
+            bool is_env_present(const std::string &key);
             void add_to_env(const std::string &key, const std::string &value);
-
-        private:
             size_t count_vars();
 
+        private:
             std::unordered_map<std::string, std::string> environment_map;
             char **raw_environment_map;
         };

@@ -5,17 +5,17 @@
 using namespace std;
 namespace pp = process_party;
 
-TEST(SystemCmd, OkStatusCode)
+TEST(TestEnvironment, BasicTests)
 {
-    auto p = pp::this_process::get_environment();
-    int status_code = pp::process::system("ls");
-    ASSERT_EQ(EXIT_SUCCESS, status_code);
+    auto env = pp::this_process::get_environment();
+    ASSERT_NE(0, env.count_vars());
+    env.clear_env();
+    ASSERT_EQ(0, env.count_vars());
 }
 
-TEST(SystemCmd, ErrorStatusCode)
+TEST(TestEnvironment, LaunchProgram)
 {
-    int status_code = pp::process::system("ls dir_which_not_exist");
-//    ASSERT_EQ(LS_NO_SUCH_DIR_ERR, status_code);
+
 }
 
 int main(int argc, char **argv)
