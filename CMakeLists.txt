@@ -9,6 +9,11 @@ endif()
 
 include_directories(${CMAKE_SOURCE_DIR})
 
+# Add Boost
+
+find_package(Boost REQUIRED)
+include_directories(${Boost_INCLUDE_DIR})
+
 # Add GoogleTest
 include(FetchContent)
 FetchContent_Declare(googletest

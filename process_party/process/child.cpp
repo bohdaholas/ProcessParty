@@ -3,10 +3,14 @@
 #include <boost/algorithm/string/split.hpp>
 #include <boost/algorithm/string/classification.hpp>
 #include <unistd.h>
-#include <sys/wait.h>
 #include "child.h"
 #include "process_party/common.h"
 
+#if IS_WINDOWS
+#elif IS_LINUX
+#include <sys/wait.h>
+#elif IS_MACOS
+#endif
 
 using std::cout, std::cerr, std::endl;
 
@@ -59,24 +63,36 @@ void process_party::process::child::launch_child(const std::string &cmd) {
 }
 
 bool process_party::process::child::running() {
+#if IS_WINDOWS
+#elif IS_LINUX
     int res = waitpid(child_pid, nullptr, WNOHANG);
     if (res == 0) {
         return true;
     } else {
         return false;
     }
+#elif IS_MACOS
+#endif
 }
 
 void process_party::process::child::detach() {
+#if IS_WINDOWS
+#elif IS_LINUX
     signal(SIGCHLD, SIG_IGN);
     exit_code = EXIT_SUCCESS;
+#elif IS_MACOS
+#endif
 }
 
 void process_party::process::child::wait() {
+#if IS_WINDOWS
+#elif IS_LINUX
     waitpid(child_pid, &exit_code, 0);
     if (WIFEXITED(exit_code)) {
         exit_code = WEXITSTATUS(exit_code);
     }
+#elif IS_MACOS
+#endif
 }
 
 int process_party::process::child::get_exit_code() const {
@@ -84,7 +100,11 @@ int process_party::process::child::get_exit_code() const {
 }
 
 void process_party::process::child::terminate() const {
+#if IS_WINDOWS
+#elif IS_LINUX
     kill(child_pid, SIGTERM);
+#elif IS_MACOS
+#endif
 }
 
 
