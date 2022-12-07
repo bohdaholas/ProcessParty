@@ -1,12 +1,12 @@
 #include <iostream>
-#include <boost/algorithm/string/classification.hpp>
-#include <boost/algorithm/string/split.hpp>
 #include <process_party/common.h>
 #include <process_party/process.h>
 
 #if IS_WINDOWS
 #include <windows.h>
 #elif IS_LINUX
+#include <boost/algorithm/string/classification.hpp>
+#include <boost/algorithm/string/split.hpp>
 #include <unistd.h>
 #include <sys/wait.h>
 #elif IS_MACOS
@@ -19,7 +19,7 @@ NUM_T process_party::process::launch_process(const std::string &cmd,
                                            char **environment) {
     DWORD status_code = EXIT_SUCCESS;
 #if IS_WINDOWS
-    bool error_occured = false;
+    bool error_occurred = false;
     STARTUPINFO si;
     PROCESS_INFORMATION pi;
 
@@ -41,10 +41,10 @@ NUM_T process_party::process::launch_process(const std::string &cmd,
                        &pi) // Pointer to PROCESS_INFORMATION structure
             ) {
         status_code = GetLastError();
-        error_occured = true;
+        error_occurred = true;
     }
     WaitForSingleObject(pi.hProcess, INFINITE);
-    if (!error_occured) {
+    if (!error_occurred) {
         GetExitCodeProcess(pi.hProcess, &status_code);
     }
     CloseHandle(pi.hProcess);

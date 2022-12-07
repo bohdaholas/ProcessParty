@@ -19,6 +19,7 @@ namespace process_party {
             bool is_env_present(const std::string &key);
             void add_to_env(const std::string &key, const std::string &value);
             size_t count_vars();
+            bool empty();
 
         private:
             std::unordered_map<std::string, std::string> environment_map;

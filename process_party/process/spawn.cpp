@@ -4,11 +4,11 @@
 
 using std::cout, std::cerr, std::endl;
 
-int process_party::process::spawn(const std::string &cmd) {
+NUM_T process_party::process::spawn(const std::string &cmd) {
     return launch_process(cmd, false);
 }
 
-int process_party::process::spawn(const std::string &exe_path,
+NUM_T process_party::process::spawn(const std::string &exe_path,
                                    const std::vector<std::string> &args) {
     std::stringstream ss;
 
@@ -22,12 +22,12 @@ int process_party::process::spawn(const std::string &exe_path,
     return process_party::process::spawn(cmd);
 }
 
-int process_party::process::spawn(const std::filesystem::path &exe_path,
+NUM_T process_party::process::spawn(const std::filesystem::path &exe_path,
                                    const std::vector<std::string> &args) {
     return process_party::process::spawn(exe_path.string(), args);
 }
 
-int process_party::process::spawn(const std::string &exe_path,
+NUM_T process_party::process::spawn(const std::string &exe_path,
                                    const std::vector<std::string> &args,
                                    const std::vector<std::pair<int, int>> &redirection_list) {
     return 0;

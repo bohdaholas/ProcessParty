@@ -8,8 +8,10 @@ namespace pp = process_party;
 TEST(TestEnvironment, BasicTests)
 {
     auto env = pp::this_process::get_environment();
-    ASSERT_NE(0, env.count_vars());
+    ASSERT_EQ(true, !env.empty());
+    ASSERT_LE(0, env.count_vars());
     env.clear_env();
+    ASSERT_EQ(true, env.empty());
     ASSERT_EQ(0, env.count_vars());
 }
 

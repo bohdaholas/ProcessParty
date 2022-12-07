@@ -5,13 +5,23 @@
 using namespace std;
 namespace ppp = process_party::process;
 
+// spawn() always returns EXIT_SUCCESS
+// because parent doesn't call wait() on the child
+
+#if IS_WINDOWS
+TEST(SpawnCmd, spawn)
+{
+    DWORD status_code = ppp::spawn("cmd /c");
+    ASSERT_EQ(EXIT_SUCCESS, status_code);
+}
+#elif IS_LINUX
 TEST(SpawnCmd, spawn)
 {
     int status_code = ppp::spawn("ls");
-    // always returns EXIT_SUCCESS as it's initial values of status_code
-    // it is not changed because parent doesn't call wait() on the child
     ASSERT_EQ(EXIT_SUCCESS, status_code);
 }
+#elif IS_MACOS
+#endif
 
 int main(int argc, char **argv)
 {
