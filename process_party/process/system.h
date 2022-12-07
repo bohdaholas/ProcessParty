@@ -4,20 +4,26 @@
 #include <vector>
 #include <filesystem>
 
+#if IS_WINDOWS
+#include <windows.h>
+#endif
+
 namespace process_party::process {
     // single line command execution
-    int system(const std::string &cmd);
+    NUM_T system(const std::string &cmd);
+
+//    NUM_T system(const std::filesystem::path &exe_path);
 
     // exe-args style
     // command name is either string or std::path
-    int system(const std::string &exe_path,
+    NUM_T system(const std::string &exe_path,
                const std::vector<std::string> &args);
-    int system(const std::filesystem::path &exe_path,
+    NUM_T system(const std::filesystem::path &exe_path,
                const std::vector<std::string> &args);
 
     // exe-args style with opportunity of I/O redirection
     // TODO: this function is not implemented :(
-    int system(const std::string &path,
+    NUM_T system(const std::string &path,
                const std::vector<std::string> &args,
                const std::vector<std::pair<int, int>> &redirection_list);
 }

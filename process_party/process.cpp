@@ -5,6 +5,7 @@
 #include <process_party/process.h>
 
 #if IS_WINDOWS
+#include <windows.h>
 #elif IS_LINUX
 #include <unistd.h>
 #include <sys/wait.h>
@@ -13,16 +14,39 @@
 
 using std::cout, std::cerr, std::endl;
 
-int process_party::process::launch_process(const std::string &cmd,
+NUM_T process_party::process::launch_process(const std::string &cmd,
                                            bool wait_to_finish,
                                            char **environment) {
-    int status_code = EXIT_SUCCESS;
-    pid_t pid;
-
-//    signal(SIGCHLD, SIG_IGN)
+    DWORD status_code = EXIT_SUCCESS;
 #if IS_WINDOWS
+    STARTUPINFO si;
+    PROCESS_INFORMATION pi;
+
+    ZeroMemory(&si, sizeof(si));
+    si.cb = sizeof(si);
+    ZeroMemory(&pi, sizeof(pi));
+
+    LPCSTR cmd_str = cmd.c_str();
+
+    if (!CreateProcess(nullptr, // No module name (use command line)
+                       (LPSTR) cmd_str, // Command line
+                       nullptr, // Process handle not inheritable
+                       nullptr, // Thread handle not inheritable
+                       FALSE, // Set handle inheritance to FALSE
+                       0, // No creation flags
+                       nullptr, // Use parent’ s environment block
+                       nullptr, // Use parent’ s starting directory
+                       &si, // Pointer to STARTUPINFO structure
+                       &pi) // Pointer to PROCESS_INFORMATION structure
+            ) {
+        status_code = GetLastError();
+        cout << "win error occurred Here" << endl;
+    }
+    WaitForSingleObject(pi.hProcess, INFINITE);
+    CloseHandle(pi.hProcess);
+    CloseHandle(pi.hThread);
 #elif IS_LINUX
-    pid = fork();
+    pid_t pid = fork();
 
     if (pid == UNIX_ERR_CODE) {
         cerr << "Failed to fork()" << endl;
