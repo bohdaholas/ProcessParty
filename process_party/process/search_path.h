@@ -4,8 +4,7 @@
 #include <filesystem>
 
 namespace process_party::process {
-    // TODO: Windows
-    std::filesystem::path search_path(const std::string &path);
+    std::filesystem::path search_path(const std::string &cmd_name);
 }
 
 #endif //PROCESS_PARTY_SEARCH_PATH_H

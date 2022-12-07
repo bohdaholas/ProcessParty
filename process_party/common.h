@@ -13,8 +13,12 @@ constexpr int UNIX_ERR_CODE = -1;
 
 #if IS_WINDOWS
 #define NUM_T DWORD
+#define ENV_DELIM ";"
+#define FS_DELIM "\\"
 #elif IS_LINUX
 #define NUM_T int
+#define ENV_DELIM ":"
+#define FS_DELIM "/"
 #elif IS_MACOS
 #define NUM_T int
 #endif

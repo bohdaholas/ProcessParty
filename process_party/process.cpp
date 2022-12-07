@@ -19,6 +19,7 @@ NUM_T process_party::process::launch_process(const std::string &cmd,
                                            char **environment) {
     DWORD status_code = EXIT_SUCCESS;
 #if IS_WINDOWS
+    bool error_occured = false;
     STARTUPINFO si;
     PROCESS_INFORMATION pi;
 
@@ -40,9 +41,12 @@ NUM_T process_party::process::launch_process(const std::string &cmd,
                        &pi) // Pointer to PROCESS_INFORMATION structure
             ) {
         status_code = GetLastError();
-        cout << "win error occurred Here" << endl;
+        error_occured = true;
     }
     WaitForSingleObject(pi.hProcess, INFINITE);
+    if (!error_occured) {
+        GetExitCodeProcess(pi.hProcess, &status_code);
+    }
     CloseHandle(pi.hProcess);
     CloseHandle(pi.hThread);
 #elif IS_LINUX

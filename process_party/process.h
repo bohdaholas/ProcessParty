@@ -14,7 +14,7 @@
 
 namespace process_party::process {
     // Function used by system()/spawn() to launch a process
-    // TODO: windows & macos support
+    // TODO: check if works for macos
     NUM_T launch_process(const std::string &cmd,
                        bool wait_to_finish,
                        char **environment = environ);
