@@ -28,13 +28,17 @@ NUM_T process_party::process::launch_process(const std::string &cmd,
     ZeroMemory(&pi, sizeof(pi));
 
     LPCSTR cmd_str = cmd.c_str();
+    int creation_flags = 0;
+//    if (!wait_to_finish) {
+//        creation_flags = (CREATE_DEFAULT_ERROR_MODE | CREATE_NO_WINDOW | DETACHED_PROCESS);
+//    }
 
     if (!CreateProcess(nullptr, // No module name (use command line)
                        (LPSTR) cmd_str, // Command line
                        nullptr, // Process handle not inheritable
                        nullptr, // Thread handle not inheritable
                        FALSE, // Set handle inheritance to FALSE
-                       0, // No creation flags
+                       CREATE_NEW_CONSOLE, // No creation flags
                        nullptr, // Use parent’ s environment block
                        nullptr, // Use parent’ s starting directory
                        &si, // Pointer to STARTUPINFO structure
@@ -43,10 +47,12 @@ NUM_T process_party::process::launch_process(const std::string &cmd,
         status_code = GetLastError();
         error_occurred = true;
     }
-    WaitForSingleObject(pi.hProcess, INFINITE);
-    if (!error_occurred) {
-        GetExitCodeProcess(pi.hProcess, &status_code);
-    }
+//    if (wait_to_finish) {
+        WaitForSingleObject(pi.hProcess, INFINITE);
+        if (!error_occurred) {
+            GetExitCodeProcess(pi.hProcess, &status_code);
+        }
+//    }
     CloseHandle(pi.hProcess);
     CloseHandle(pi.hThread);
 #elif IS_LINUX

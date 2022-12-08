@@ -11,7 +11,8 @@ namespace ppp = process_party::process;
 #if IS_WINDOWS
 TEST(SpawnCmd, spawn)
 {
-    DWORD status_code = ppp::spawn("cmd /c");
+//    DWORD status_code = ppp::spawn("cmd.exe /c dir");
+    DWORD status_code = ppp::spawn("cmd.exe");
     ASSERT_EQ(EXIT_SUCCESS, status_code);
 }
 #elif IS_LINUX

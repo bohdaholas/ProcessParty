@@ -15,7 +15,8 @@ namespace ppp = process_party::process;
 TEST(SystemCmd, OkStatusCode)
 {
     // /c - Run Command and then terminate
-    DWORD status_code = ppp::system("cmd.exe /c");
+    DWORD status_code = ppp::system("cmd.exe");
+//    DWORD status_code = ppp::system("cmd.exe /c");
     ASSERT_EQ(EXIT_SUCCESS, status_code);
 }
 
