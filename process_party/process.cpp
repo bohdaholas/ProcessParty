@@ -17,8 +17,8 @@ using std::cout, std::cerr, std::endl;
 NUM_T process_party::process::launch_process(const std::string &cmd,
                                            bool wait_to_finish,
                                            char **environment) {
-    DWORD status_code = EXIT_SUCCESS;
 #if IS_WINDOWS
+    DWORD status_code = EXIT_SUCCESS;
     bool error_occurred = false;
     STARTUPINFO si;
     PROCESS_INFORMATION pi;
@@ -56,6 +56,7 @@ NUM_T process_party::process::launch_process(const std::string &cmd,
     CloseHandle(pi.hProcess);
     CloseHandle(pi.hThread);
 #elif IS_LINUX
+    int status_code = EXIT_SUCCESS;
     pid_t pid = fork();
 
     if (pid == UNIX_ERR_CODE) {

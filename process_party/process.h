@@ -10,6 +10,9 @@
 
 #if IS_WINDOWS
 #include <windows.h>
+#elif IS_LINUX
+#include <unistd.h>
+#elif IS_MACOS
 #endif
 
 namespace process_party::process {
