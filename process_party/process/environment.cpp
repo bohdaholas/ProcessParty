@@ -2,7 +2,6 @@
 #include <boost/algorithm/string/split.hpp>
 #include <boost/algorithm/string/classification.hpp>
 #include <iostream>
-#include <csignal>
 #include "environment.h"
 
 using std::cout, std::cerr, std::endl;
@@ -38,11 +37,8 @@ char **process_party::process::environment::get_raw() {
         std::stringstream assignment_ss;
         assignment_ss << key << "=" << value;
         env[i] = new char[PATH_MAX];
-//        printf("%p\n", env[i]);
-//        fflush(stdout);
         memset(env[i], 0, PATH_MAX);
         std::string res = assignment_ss.str();
-        cout << res << endl;
         strcpy(env[i], res.c_str());
         i++;
     }
@@ -91,8 +87,8 @@ void process_party::process::environment::clear_env() {
     if (raw_environment_map == nullptr) {
         return;
     }
-    for (char **line_c = raw_environment_map; *line_c; line_c += PATH_MAX) {
-        delete[] line_c;
+    for (char **line_c = raw_environment_map; *line_c != nullptr; line_c += 1) {
+        delete[] *line_c;
     }
     raw_environment_map = nullptr;
 }

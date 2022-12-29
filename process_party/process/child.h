@@ -6,7 +6,6 @@
 namespace process_party::process {
     class child {
     public:
-        /*** Don't allow default constructors/destructors ***/
         child() = delete;
         ~child() = default;
 

@@ -7,6 +7,7 @@
 
 namespace process_party {
     namespace process {
+        // TODO: fix bugs + write tests
         class environment {
         public:
             environment();

@@ -23,4 +23,19 @@ constexpr int UNIX_ERR_CODE = -1;
 #define NUM_T int
 #endif
 
+#include <fcntl.h>
+#include <sys/ipc.h>
+
+enum creation_mode_t {
+    create_only = IPC_CREAT | IPC_EXCL,
+    open_or_create = IPC_CREAT,
+    open_only = 0
+};
+
+enum access_mode_t {
+    read_only = S_IRUSR,
+    write_only = S_IWUSR,
+    read_write = S_IRUSR | S_IWUSR
+};
+
 #endif //PROCESS_PARTY_COMMON_H
