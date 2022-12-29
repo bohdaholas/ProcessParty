@@ -25,26 +25,52 @@ constexpr int UNIX_ERR_CODE = -1;
 
 #include <fcntl.h>
 #include <sys/ipc.h>
+#include <fstream>
 
-//enum creation_mode_t {
-//    create_only = IPC_CREAT | IPC_EXCL,
-//    open_or_create = IPC_CREAT,
-//    open_only = 0
-//};
-//
-struct creation_mode_t {
-    enum shm_creation_mode_t {
-        create_only = IPC_CREAT | IPC_EXCL,
-        open_or_create = IPC_CREAT,
-        open_only = 0
-    };
-
-    enum file_creation_mode_t {
-        create_only = O_CREAT | O_EXCL,
-        open_or_create = O_CREAT,
-        open_only = 0
-    };
+enum creation_mode_t {
+    create_only,
+    open_or_create,
+    open_only
 };
+
+enum ipc_type_t {
+    ipc_file,
+    ipc_shared_memory,
+    ipc_anonymous
+};
+
+inline bool file_exists(const std::string& filename) {
+    std::ifstream file(filename.c_str());
+    return file.good();
+}
+
+inline int get_creation_mode(creation_mode_t creation_mode,
+                             ipc_type_t ipc_type) {
+    switch (creation_mode) {
+        case create_only:
+            switch (ipc_type) {
+                case ipc_file:
+                    return O_CREAT | O_EXCL;
+                case ipc_shared_memory:
+                case ipc_anonymous:
+                    return IPC_CREAT | IPC_EXCL;
+            }
+            break;
+        case open_or_create:
+            switch (ipc_type) {
+                case ipc_file:
+                    return O_CREAT;
+                case ipc_shared_memory:
+                case ipc_anonymous:
+                    return IPC_CREAT;
+            }
+            break;
+        case open_only:
+        default:
+            return 0;
+    }
+}
+
 enum access_mode_t {
     read_only = S_IRUSR,
     write_only = S_IWUSR,

@@ -10,11 +10,6 @@
 
 static std::unordered_map<std::string, int> shm_map;
 
-inline bool file_exists(const std::string& filename) {
-    std::ifstream file(filename.c_str());
-    return file.good();
-}
-
 process_party::interprocess::shared_memory_object::shared_memory_object(
         const std::string &shm_obj_name,
         access_mode_t access_mode,
@@ -76,9 +71,10 @@ process_party::interprocess::shared_memory_object::truncate(size_t region_size) 
     if (region_size < getpagesize()) {
         region_size = getpagesize();
     }
+    int flags = get_creation_mode(creation_mode, ipc_shared_memory) | access_mode;
     shared_block_id = shmget(key,
                               region_size,
-                             creation_mode | access_mode);
+                             flags);
     if (shared_block_id == IPC_ERR) {
         throw std::runtime_error("Couldn't create block of shared memory");
     }
