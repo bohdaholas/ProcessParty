@@ -7,18 +7,10 @@
 namespace process_party::interprocess {
     class MemoryMappable {
     public:
-//        MemoryMappable() = delete;
-//        virtual ~MemoryMappable();
-
-        virtual void truncate(size_t memory_region_size) = 0;
-        [[nodiscard]] const std::string &get_name() const noexcept;
-        [[nodiscard]] size_t get_size() const noexcept;
-        [[nodiscard]] access_mode_t get_mode() const noexcept;
-
-    private:
-        access_mode_t access_mode;
-        std::string name;
-        size_t memory_region_size = 0;
+        virtual const std::string &get_name() const noexcept;
+        virtual size_t get_size() const noexcept;
+        virtual int get_shared_block_id() const noexcept;
+        virtual access_mode_t get_mode() const noexcept;
     };
 }
 

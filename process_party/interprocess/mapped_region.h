@@ -9,10 +9,10 @@ namespace process_party::interprocess {
     class mapped_region {
     public:
         mapped_region() = delete;
-        mapped_region(const process_party::interprocess::shared_memory_object &shm_obj);
-        mapped_region(const process_party::interprocess::shared_memory_object &shm_obj,
+        mapped_region(const process_party::interprocess::MemoryMappable &shm_obj);
+        mapped_region(const process_party::interprocess::MemoryMappable &shm_obj,
                       size_t offset);
-        mapped_region(const process_party::interprocess::shared_memory_object &shm_obj,
+        mapped_region(const process_party::interprocess::MemoryMappable &shm_obj,
                       size_t offset,
                       size_t size);
 

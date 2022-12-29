@@ -5,14 +5,14 @@
 #include "mapped_region.h"
 
 process_party::interprocess::mapped_region::mapped_region(
-        const process_party::interprocess::shared_memory_object &shm_obj)
+        const process_party::interprocess::MemoryMappable &shm_obj)
 {
     address = shmat(shm_obj.get_shared_block_id(), nullptr, 0);
     region_start = region_end = reinterpret_cast<size_t>(address);
 }
 
 process_party::interprocess::mapped_region::mapped_region(
-        const process_party::interprocess::shared_memory_object &shm_obj,
+        const process_party::interprocess::MemoryMappable &shm_obj,
         size_t offset) : mapped_region(shm_obj)
 {
     region_start += offset;
@@ -20,7 +20,7 @@ process_party::interprocess::mapped_region::mapped_region(
 }
 
 process_party::interprocess::mapped_region::mapped_region(
-        const process_party::interprocess::shared_memory_object &shm_obj,
+        const process_party::interprocess::MemoryMappable &shm_obj,
         size_t offset,
         size_t region_length) : mapped_region(shm_obj)
 {

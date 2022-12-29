@@ -26,12 +26,25 @@ constexpr int UNIX_ERR_CODE = -1;
 #include <fcntl.h>
 #include <sys/ipc.h>
 
-enum creation_mode_t {
-    create_only = IPC_CREAT | IPC_EXCL,
-    open_or_create = IPC_CREAT,
-    open_only = 0
-};
+//enum creation_mode_t {
+//    create_only = IPC_CREAT | IPC_EXCL,
+//    open_or_create = IPC_CREAT,
+//    open_only = 0
+//};
+//
+struct creation_mode_t {
+    enum shm_creation_mode_t {
+        create_only = IPC_CREAT | IPC_EXCL,
+        open_or_create = IPC_CREAT,
+        open_only = 0
+    };
 
+    enum file_creation_mode_t {
+        create_only = O_CREAT | O_EXCL,
+        open_or_create = O_CREAT,
+        open_only = 0
+    };
+};
 enum access_mode_t {
     read_only = S_IRUSR,
     write_only = S_IWUSR,

@@ -6,7 +6,7 @@
 constexpr int NOT_DEFINED = -1;
 
 namespace process_party::interprocess {
-    class shared_memory_object {
+    class shared_memory_object : MemoryMappable {
     public:
         shared_memory_object() = delete;
         virtual ~shared_memory_object();
