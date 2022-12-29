@@ -15,11 +15,11 @@ namespace process_party::interprocess {
                              creation_mode_t creation_mode = open_or_create,
                              bool destroy_on_exit = false);
 
-        void truncate(size_t memory_region_size);
-        [[nodiscard]] const std::string &get_name() const noexcept;
-        [[nodiscard]] size_t get_size() const noexcept;
-        [[nodiscard]] int get_shared_block_id() const noexcept;
-        [[nodiscard]] access_mode_t get_mode() const noexcept;
+        void truncate(size_t memory_region_size) override;
+        [[nodiscard]] const std::string &get_name() const noexcept override;
+        [[nodiscard]] size_t get_size() const noexcept override;
+        [[nodiscard]] int get_shared_block_id() const noexcept override;
+        [[nodiscard]] access_mode_t get_mode() const noexcept override;
 
         static bool remove(const std::string &shm_obj_name);
     private:

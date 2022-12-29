@@ -14,21 +14,21 @@ namespace process_party::interprocess {
                               creation_mode_t creation_mode = open_or_create,
                               bool destroy_on_exit = false);
 
+        void truncate(size_t memory_region_size) override;
         [[nodiscard]] const std::string &get_name() const noexcept override;
         [[nodiscard]] access_mode_t get_mode() const noexcept override;
+        [[nodiscard]] int get_file_descriptor() const noexcept override;
+        [[nodiscard]] size_t get_size() const noexcept override;
 
         static bool remove(const std::string &shm_obj_name);
     private:
         key_t key;
         creation_mode_t creation_mode;
         access_mode_t access_mode;
-        int shared_block_id = NOT_DEFINED;
         std::string filename;
-        size_t memory_region_size = 0;
+        int file_descriptor = NOT_DEFINED;
+        size_t file_size = 0;
         bool destroy_on_exit;
-
-        bool is_file_ok(const std::string &basicString, access_mode_t mode,
-                        creation_mode_t mode1);
     };
 }
 

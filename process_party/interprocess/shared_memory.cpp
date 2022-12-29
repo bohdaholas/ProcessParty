@@ -42,6 +42,7 @@ process_party::interprocess::shared_memory_object::shared_memory_object(
         throw std::runtime_error("Couldn't create key for block of shared memory");
     }
     shm_map[shm_obj_name] = NOT_DEFINED;
+    ipc_type = ipc_shared_memory;
 }
 
 process_party::interprocess::shared_memory_object::~shared_memory_object() {

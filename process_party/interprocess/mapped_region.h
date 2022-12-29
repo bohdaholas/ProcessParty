@@ -9,9 +9,6 @@ namespace process_party::interprocess {
     class mapped_region {
     public:
         mapped_region() = delete;
-        mapped_region(const process_party::interprocess::MemoryMappable &shm_obj);
-        mapped_region(const process_party::interprocess::MemoryMappable &shm_obj,
-                      size_t offset);
         mapped_region(const process_party::interprocess::MemoryMappable &shm_obj,
                       size_t offset,
                       size_t size);
@@ -21,9 +18,10 @@ namespace process_party::interprocess {
         [[nodiscard]] std::size_t get_size() const noexcept;
         [[nodiscard]] void *get_address() const noexcept;
         [[nodiscard]] access_mode_t get_mode() const noexcept;
-        bool flush(std::size_t = 0, std::size_t = 0, bool = true);
+        bool flush() const;
         static std::size_t get_page_size() noexcept;
     private:
+        int ipc_type;
         size_t region_start;
         size_t region_end;
         void *address;
