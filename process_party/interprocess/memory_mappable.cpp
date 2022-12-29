@@ -31,16 +31,11 @@ process_party::interprocess::MemoryMappable::get_mode() const noexcept
 }
 
 int process_party::interprocess::MemoryMappable::get_ipc_type() const noexcept {
-    return NOT_DEFINED;
+    return ipc_type;
 }
 
 int
 process_party::interprocess::MemoryMappable::get_file_descriptor() const noexcept
 {
     return NOT_DEFINED;
-}
-
-int process_party::interprocess::MemoryMappable::get_file_size() const noexcept
-{
-    return 0;
 }

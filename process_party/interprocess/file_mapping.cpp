@@ -6,12 +6,10 @@
 process_party::interprocess::file_mapping::file_mapping(
         const std::string &filename,
         access_mode_t access_mode,
-        creation_mode_t creation_mode,
-        bool destroy_on_exit) :
+        creation_mode_t creation_mode) :
         filename{filename},
         access_mode{access_mode},
-        creation_mode{creation_mode},
-        destroy_on_exit{destroy_on_exit}
+        creation_mode{creation_mode}
 {
     int o_flags = get_creation_mode(creation_mode, ipc_file);
     int fd = open(filename.c_str(), o_flags, access_mode);
@@ -30,6 +28,7 @@ void
 process_party::interprocess::file_mapping::truncate(size_t size)
 {
     ftruncate(file_descriptor, (int) size);
+    file_size = size;
 }
 
 const std::string &

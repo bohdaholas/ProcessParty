@@ -13,13 +13,12 @@ static std::unordered_map<std::string, int> shm_map;
 process_party::interprocess::shared_memory_object::shared_memory_object(
         const std::string &shm_obj_name,
         access_mode_t access_mode,
-        creation_mode_t creation_mode,
-        bool destroy_on_exit) :
+        creation_mode_t creation_mode) :
         shm_obj_name{shm_obj_name},
         access_mode{access_mode},
-        creation_mode{creation_mode},
-        destroy_on_exit{destroy_on_exit}
+        creation_mode{creation_mode}
 {
+//    using namespace std;
     if (shm_map.count(shm_obj_name)) {
         throw std::runtime_error("shm file already exists in this process");
     }
@@ -46,10 +45,7 @@ process_party::interprocess::shared_memory_object::shared_memory_object(
 }
 
 process_party::interprocess::shared_memory_object::~shared_memory_object() {
-    if (destroy_on_exit) {
-        remove(shm_obj_name);
-    }
-    std::remove(shm_obj_name.c_str());
+//    std::remove(shm_obj_name.c_str());
 }
 
 bool process_party::interprocess::shared_memory_object::remove(

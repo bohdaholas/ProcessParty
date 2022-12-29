@@ -4,6 +4,7 @@
 #include <process_party/common.h>
 #include <process_party/interprocess/memory_mappable.h>
 #include <process_party/interprocess/shared_memory.h>
+#include <process_party/interprocess/anonymous_shared_memory.h>
 #include <process_party/interprocess/file_mapping.h>
 #include <process_party/interprocess/mapped_region.h>
 

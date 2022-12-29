@@ -32,6 +32,16 @@ void FileMappingFixture::TearDown()
     ASSERT_EQ(false, file_exists(filename));
 }
 
+FileMappingFixture::FileMappingFixture()
+{
+
+}
+
+FileMappingFixture::~FileMappingFixture()
+{
+
+}
+
 TEST_F(FileMappingFixture, TestSingleArgConstructor) {
     ASSERT_EQ(true, file_exists(filename));
     ppip::file_mapping fm(filename);

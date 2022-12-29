@@ -31,6 +31,9 @@ process_party::interprocess::mapped_region::mapped_region(
                        -1,
                        (int) offset);
     }
+    if (address == MAP_FAILED) {
+        throw std::runtime_error("failed to set up address for ipc");
+    }
     region_start = region_end = reinterpret_cast<size_t>(address);
     region_start += offset;
     region_end += ipc_obj.get_size();
@@ -38,10 +41,10 @@ process_party::interprocess::mapped_region::mapped_region(
 
 process_party::interprocess::mapped_region::~mapped_region() {
     if (ipc_type == ipc_shared_memory && shmdt(address) == IPC_ERR) {
-        throw std::runtime_error("coudn't detach block");
+//        throw std::runtime_error("coudn't detach block");
     } else if ((ipc_type == ipc_file || ipc_type == ipc_anonymous) &&
                 munmap(get_address(), get_size()) == IPC_ERR) {
-        throw std::runtime_error("coudn't detach block");
+//        throw std::runtime_error("coudn't detach block");
     }
 }
 
@@ -54,14 +57,9 @@ void *process_party::interprocess::mapped_region::get_address() const noexcept {
     return address;
 }
 
-access_mode_t process_party::interprocess::mapped_region::get_mode() const noexcept {
-    return access_mode;
-}
-
 bool process_party::interprocess::mapped_region::flush() const {
-    return msync(get_address(), get_size(), MS_SYNC) == EXIT_SUCCESS;
-}
-
-std::size_t process_party::interprocess::mapped_region::get_page_size() noexcept {
-    return getpagesize();
+    if (ipc_type == ipc_file) {
+        return msync(get_address(), get_size(), MS_SYNC) == EXIT_SUCCESS;
+    }
+    return true;
 }

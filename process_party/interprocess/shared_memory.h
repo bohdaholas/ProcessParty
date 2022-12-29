@@ -6,14 +6,13 @@
 constexpr int NOT_DEFINED = -1;
 
 namespace process_party::interprocess {
-    class shared_memory_object : MemoryMappable {
+    class shared_memory_object : public MemoryMappable {
     public:
         shared_memory_object() = delete;
         virtual ~shared_memory_object();
         explicit shared_memory_object(const std::string &shm_obj_name,
                              access_mode_t access_mode = read_write,
-                             creation_mode_t creation_mode = open_or_create,
-                             bool destroy_on_exit = false);
+                             creation_mode_t creation_mode = open_or_create);
 
         void truncate(size_t memory_region_size) override;
         [[nodiscard]] const std::string &get_name() const noexcept override;
@@ -29,7 +28,6 @@ namespace process_party::interprocess {
         int shared_block_id = NOT_DEFINED;
         std::string shm_obj_name;
         size_t memory_region_size = 0;
-        bool destroy_on_exit;
     };
 }
 

@@ -5,14 +5,13 @@
 #include "memory_mappable.h"
 
 namespace process_party::interprocess {
-    class file_mapping : MemoryMappable {
+    class file_mapping : public MemoryMappable {
     public:
         file_mapping() = delete;
         virtual ~file_mapping();
         explicit file_mapping(const std::string &filename,
                               access_mode_t access_mode = read_write,
-                              creation_mode_t creation_mode = open_or_create,
-                              bool destroy_on_exit = false);
+                              creation_mode_t creation_mode = open_or_create);
 
         void truncate(size_t memory_region_size) override;
         [[nodiscard]] const std::string &get_name() const noexcept override;
@@ -28,7 +27,6 @@ namespace process_party::interprocess {
         std::string filename;
         int file_descriptor = NOT_DEFINED;
         size_t file_size = 0;
-        bool destroy_on_exit;
     };
 }
 

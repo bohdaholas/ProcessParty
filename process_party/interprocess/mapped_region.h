@@ -2,7 +2,7 @@
 #define PROCESS_PARTY_MAPPED_REGION_H
 
 #include <process_party/common.h>
-#include <process_party/interprocess/shared_memory.h>
+#include <process_party/interprocess.h>
 #include <string>
 
 namespace process_party::interprocess {
@@ -17,9 +17,7 @@ namespace process_party::interprocess {
 
         [[nodiscard]] std::size_t get_size() const noexcept;
         [[nodiscard]] void *get_address() const noexcept;
-        [[nodiscard]] access_mode_t get_mode() const noexcept;
         bool flush() const;
-        static std::size_t get_page_size() noexcept;
     private:
         int ipc_type;
         size_t region_start;
