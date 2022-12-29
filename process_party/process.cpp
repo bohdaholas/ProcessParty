@@ -95,11 +95,12 @@ NUM_T process_party::process::launch_process(const std::string &cmd,
             arg_for_c.push_back(s.c_str());
         }
         arg_for_c.push_back(nullptr);
-        redirection_manager.redirect();
+        if (redirection_manager.redirect() == -1) {
+            exit(EXIT_FAILURE);
+        }
         execvpe(args.at(0).c_str(),
                 const_cast<char *const *>(arg_for_c.data()),
                 environment);
-
         cerr << "Error occured when launching a program" << endl;
         exit(EXIT_FAILURE);
     }

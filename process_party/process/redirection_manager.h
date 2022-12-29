@@ -3,7 +3,9 @@
 
 #include <unistd.h>
 #include <string>
+#include <vector>
 #include <fcntl.h>
+#include "process_party/interprocess/pipe_stream.h"
 
 namespace process_party::process {
     class redirection_manager {
@@ -24,6 +26,12 @@ namespace process_party::process {
 
         void set_stderr(FILE *fptr);
 
+        void set_stdin(const pipe_stream &pipe);
+
+        void set_stdout(const pipe_stream &pipe);
+
+        void set_stderr(const pipe_stream &pipe);
+
         int redirect() const;
 
     private:
@@ -31,9 +39,8 @@ namespace process_party::process {
         int stdout_fd = STDOUT_FILENO;
         int stderr_fd = STDERR_FILENO;
 
-        int stdin_opened = false;
-        int stdout_opened = false;
-        int stderr_opened = false;
+        std::vector<int> close_before{};
+        std::vector<int> close_after{};
 
         static int redirect_std_fd(int std_fd, int file_fd);
     };

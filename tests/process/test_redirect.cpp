@@ -67,6 +67,17 @@ TEST(PointerRedirect, OutputTest) {
     ASSERT_EQ(read_file(test_file), "Hello\n");
 }
 
+TEST(PipeRedirect, OutputTest) {
+    auto pipe = ppp::pipe_stream();
+    auto redirection = process_party::process::redirection_manager{};
+    redirection.set_stdout(pipe);
+    ppp::system("echo Hello", redirection);
+
+    char buf[5];
+    read(pipe.read_fd, buf, 5);
+    ASSERT_STREQ(buf, "Hello");
+}
+
 int main(int argc, char **argv) {
     testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
