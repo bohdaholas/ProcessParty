@@ -52,13 +52,17 @@ void process_party::process::redirection_manager::set_stdin(const std::string &f
 }
 
 void process_party::process::redirection_manager::set_stdout(const std::string &filename) {
+#if IS_LINUX
     stdout_fd = open(filename.c_str(), O_CREAT | O_WRONLY | O_TRUNC, S_IWUSR);
     close_after.push_back(stdout_fd);
+#endif
 }
 
 void process_party::process::redirection_manager::set_stderr(const std::string &filename) {
+#if IS_LINUX
     stderr_fd = open(filename.c_str(), O_CREAT | O_WRONLY | O_TRUNC, S_IWUSR);
     close_after.push_back(stderr_fd);
+#endif
 }
 
 void process_party::process::redirection_manager::set_stdin(FILE *fptr) {

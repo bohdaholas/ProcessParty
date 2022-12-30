@@ -2,7 +2,10 @@
 #include <cstring>
 #include <process_party/interprocess.h>
 #include <process_party/process.h>
+
+#if IS_LINUX
 #include <sys/wait.h>
+#endif
 
 namespace ppp = process_party::process;
 namespace ppip = process_party::interprocess;
@@ -10,6 +13,7 @@ namespace ppip = process_party::interprocess;
 using namespace std;
 
 int main(int argc, char **argv) {
+#if IS_LINUX
     ppip::anonymous_shared_memory shm(getpagesize());
     ppip::mapped_region region(shm, 0, shm.get_size());
     char *mem = static_cast<char *>(region.get_address());
@@ -29,4 +33,5 @@ int main(int argc, char **argv) {
     }
 
     return EXIT_SUCCESS;
+#endif
 }

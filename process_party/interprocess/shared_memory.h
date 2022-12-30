@@ -22,7 +22,7 @@ namespace process_party::interprocess {
 
         static bool remove(const std::string &shm_obj_name);
     private:
-        key_t key;
+        int key;
         creation_mode_t creation_mode;
         access_mode_t access_mode;
         int shared_block_id = NOT_DEFINED;

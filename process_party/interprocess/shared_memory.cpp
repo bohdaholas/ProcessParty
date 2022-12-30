@@ -1,12 +1,15 @@
 #include <unordered_map>
 #include <unistd.h>
-#include <sys/ipc.h>
-#include <sys/shm.h>
 #include <process_party/interprocess.h>
 #include <stdexcept>
 #include <fstream>
 #include <iostream>
 #include "shared_memory.h"
+
+#if IS_LINUX
+#include <sys/ipc.h>
+#include <sys/shm.h>
+#endif
 
 static std::unordered_map<std::string, int> shm_map;
 
@@ -36,12 +39,14 @@ process_party::interprocess::shared_memory_object::shared_memory_object(
     shm_file.close();
 
     // proj_id=0 is always used to give the same key_t for the same shm_obj_name
+#if IS_LINUX
     key = ftok(shm_obj_name.c_str(), 0);
     if (key == IPC_ERR) {
         throw std::runtime_error("Couldn't create key for block of shared memory");
     }
     shm_map[shm_obj_name] = NOT_DEFINED;
     ipc_type = ipc_shared_memory;
+#endif
 }
 
 process_party::interprocess::shared_memory_object::~shared_memory_object() {
@@ -51,6 +56,7 @@ process_party::interprocess::shared_memory_object::~shared_memory_object() {
 bool process_party::interprocess::shared_memory_object::remove(
         const std::string &shm_obj_name)
 {
+#if IS_LINUX
     auto it = shm_map.find(shm_obj_name);
     if (it != shm_map.end()) {
         bool res =  shmctl(shm_map.at(shm_obj_name), IPC_RMID, nullptr);
@@ -58,10 +64,12 @@ bool process_party::interprocess::shared_memory_object::remove(
         return res;
     }
     return false;
+#endif
 }
 
 void
 process_party::interprocess::shared_memory_object::truncate(size_t region_size) {
+#if IS_LINUX
     if (shared_block_id > 0) {
         throw std::runtime_error("already truncated");
     }
@@ -77,6 +85,7 @@ process_party::interprocess::shared_memory_object::truncate(size_t region_size) 
     }
     shm_map[get_name()] = shared_block_id;
     memory_region_size = region_size;
+#endif
 }
 
 const std::string &

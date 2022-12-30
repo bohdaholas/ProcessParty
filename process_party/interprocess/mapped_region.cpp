@@ -1,15 +1,20 @@
-#include <sys/shm.h>
-#include <sys/mman.h>
 #include <unistd.h>
 #include <stdexcept>
 #include <process_party/interprocess.h>
 #include "mapped_region.h"
+
+#if IS_WINDOWS
+#elif IS_LINUX
+#include <sys/shm.h>
+#include <sys/mman.h>
+#endif
 
 process_party::interprocess::mapped_region::mapped_region(
         const process_party::interprocess::MemoryMappable &ipc_obj,
         size_t offset,
         size_t region_length)
 {
+#if IS_LINUX
     if (offset + region_length > ipc_obj.get_size()) {
         throw std::runtime_error("Invalid region bounds");
     }
@@ -37,15 +42,18 @@ process_party::interprocess::mapped_region::mapped_region(
     region_start = region_end = reinterpret_cast<size_t>(address);
     region_start += offset;
     region_end += ipc_obj.get_size();
+#endif
 }
 
 process_party::interprocess::mapped_region::~mapped_region() {
+#if IS_LINUX
     if (ipc_type == ipc_shared_memory && shmdt(address) == IPC_ERR) {
         throw std::runtime_error("coudn't detach block");
     } else if ((ipc_type == ipc_file || ipc_type == ipc_anonymous) &&
                 munmap(get_address(), get_size()) == IPC_ERR) {
         throw std::runtime_error("coudn't detach block");
     }
+#endif
 }
 
 std::size_t
@@ -58,8 +66,10 @@ void *process_party::interprocess::mapped_region::get_address() const noexcept {
 }
 
 bool process_party::interprocess::mapped_region::flush() const {
+#if IS_LINUX
     if (ipc_type == ipc_file) {
         return msync(get_address(), get_size(), MS_SYNC) == EXIT_SUCCESS;
     }
     return true;
+#endif
 }

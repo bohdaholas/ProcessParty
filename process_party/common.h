@@ -16,6 +16,7 @@ constexpr int UNIX_ERR_CODE = -1;
 #define ENV_DELIM ";"
 #define FS_DELIM "\\"
 #elif IS_LINUX
+#include <sys/ipc.h>
 #define NUM_T int
 #define ENV_DELIM ":"
 #define FS_DELIM "/"
@@ -24,7 +25,6 @@ constexpr int UNIX_ERR_CODE = -1;
 #endif
 
 #include <fcntl.h>
-#include <sys/ipc.h>
 #include <fstream>
 
 enum creation_mode_t {
@@ -46,6 +46,7 @@ inline bool file_exists(const std::string& filename) {
 
 inline int get_creation_mode(creation_mode_t creation_mode,
                              ipc_type_t ipc_type) {
+#if IS_LINUX
     switch (creation_mode) {
         case create_only:
             switch (ipc_type) {
@@ -69,12 +70,19 @@ inline int get_creation_mode(creation_mode_t creation_mode,
         default:
             return 0;
     }
+#endif
 }
 
 enum access_mode_t {
+#if IS_WINDOWS
+    read_only = 0,
+    write_only = 1,
+    read_write = 2
+#elif IS_LINUX
     read_only = S_IRUSR,
     write_only = S_IWUSR,
     read_write = S_IRUSR | S_IWUSR
+#endif
 };
 
 #endif //PROCESS_PARTY_COMMON_H
