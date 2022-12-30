@@ -6,6 +6,9 @@ namespace ppp = process_party::process;
 using namespace std;
 
 int main() {
-    int status_code = ppp::system("ls");
-    cout << status_code << endl;
+    ppp::system("ls");
+
+    auto redirection = process_party::process::redirection_manager{};
+    redirection.set_stdout("test.txt");
+    ppp::system("ls", redirection);
 }

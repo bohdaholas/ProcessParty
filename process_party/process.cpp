@@ -9,6 +9,8 @@
 #include <boost/algorithm/string/split.hpp>
 #include <unistd.h>
 #include <sys/wait.h>
+#include "process_party/process/redirection_manager.h"
+
 #elif IS_MACOS
 #endif
 
@@ -16,6 +18,7 @@ using std::cout, std::cerr, std::endl;
 
 NUM_T process_party::process::launch_process(const std::string &cmd,
                                            bool wait_to_finish,
+                                           const redirection_manager &redirection_manager,
                                            char **environment) {
 #if IS_WINDOWS
     DWORD status_code = EXIT_SUCCESS;
@@ -65,24 +68,20 @@ NUM_T process_party::process::launch_process(const std::string &cmd,
     } else if (pid > 0) {
         // Parent process
         if (wait_to_finish) {
-            if ( waitpid(pid, &status_code, 0) != -1 ) {
-                if ( WIFEXITED(status_code) ) {
+            if (waitpid(pid, &status_code, 0) != -1) {
+                if (WIFEXITED(status_code)) {
                     int returned = WEXITSTATUS(status_code);
                     printf("Exited normally with status_code %d\n", returned);
-                }
-                else if ( WIFSIGNALED(status_code) ) {
+                } else if (WIFSIGNALED(status_code)) {
                     int signum = WTERMSIG(status_code);
                     printf("Exited due to receiving signal %d\n", signum);
-                }
-                else if ( WIFSTOPPED(status_code) ) {
+                } else if (WIFSTOPPED(status_code)) {
                     int signum = WSTOPSIG(status_code);
                     printf("Stopped due to receiving signal %d\n", signum);
-                }
-                else {
+                } else {
                     printf("Something strange just happened.\n");
                 }
-            }
-            else {
+            } else {
                 perror("waitpid() failed");
                 exit(EXIT_FAILURE);
             }
@@ -96,11 +95,12 @@ NUM_T process_party::process::launch_process(const std::string &cmd,
             arg_for_c.push_back(s.c_str());
         }
         arg_for_c.push_back(nullptr);
-
+        if (redirection_manager.redirect() == -1) {
+            exit(EXIT_FAILURE);
+        }
         execvpe(args.at(0).c_str(),
-               const_cast<char *const *>(arg_for_c.data()),
-               environment);
-
+                const_cast<char *const *>(arg_for_c.data()),
+                environment);
         cerr << "Error occured when launching a program" << endl;
         exit(EXIT_FAILURE);
     }
@@ -131,11 +131,5 @@ std::string
 process_party::process::get_cmd(const std::filesystem::path &exe_path,
                                 const std::vector<std::string> &args) {
     return get_cmd(exe_path.string(), args);
-}
-
-std::string process_party::process::get_cmd(const std::string &exe_path,
-                                            const std::vector<std::string> &args,
-                                            const std::vector<std::pair<int, int>> &redirection_list) {
-    return std::string();
 }
 
