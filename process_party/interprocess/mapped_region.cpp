@@ -41,10 +41,10 @@ process_party::interprocess::mapped_region::mapped_region(
 
 process_party::interprocess::mapped_region::~mapped_region() {
     if (ipc_type == ipc_shared_memory && shmdt(address) == IPC_ERR) {
-//        throw std::runtime_error("coudn't detach block");
+        throw std::runtime_error("coudn't detach block");
     } else if ((ipc_type == ipc_file || ipc_type == ipc_anonymous) &&
                 munmap(get_address(), get_size()) == IPC_ERR) {
-//        throw std::runtime_error("coudn't detach block");
+        throw std::runtime_error("coudn't detach block");
     }
 }
 
